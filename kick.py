@@ -58,7 +58,7 @@ while running:
                 pygame.draw.rect(screen, "#000000", [40+note["anim"]/2, 40+note["anim"]/2, 400-note["anim"], 400-note["anim"]], int(note["anim"]))
 
     # print(duration-play_time+screen_width/2/100)
-    if duration-play_time < -10:
+    if duration-play_time < -5:
         running = False
         
     counter += 1

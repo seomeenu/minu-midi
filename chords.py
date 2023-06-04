@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 # name = input()
 name = "chords"
 
-font = pygame.font.Font("src/GmarketSansTTFMedium.ttf", 100)
+font = pygame.font.Font("src/GmarketSansTTFMedium.ttf", 80)
 def draw_center_text(text, x, y, color="#000000", font=font, alpha=255):
     render = font.render(text, True, color)
     render.set_alpha(alpha)

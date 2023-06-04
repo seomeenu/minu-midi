@@ -105,7 +105,7 @@ while running:
     # clock.tick(60)
     # pygame.display.update()
  
-# print("1")
+print("1")
 
 video = cv2.VideoWriter(f"res/{name}.mp4", cv2.VideoWriter_fourcc(*"XVID"), fps, (int(screen_width), int(screen_height)))
 

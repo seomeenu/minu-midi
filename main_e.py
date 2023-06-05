@@ -4,6 +4,7 @@ import json
 import cv2
 import os
 import shutil
+from easing_functions import *
 
 pygame.init()
 
@@ -36,12 +37,12 @@ dist = max_note-min_note
 # screen_height = 720
 screen_width = bar_duration*100+210
 screen_height = min(dist*height+100, 720)
-screen = pygame.Surface((screen_width, screen_height))
-# screen = pygame.display.set_mode((screen_width, screen_height))
+# screen = pygame.Surface((screen_width, screen_height))
+screen = pygame.display.set_mode((screen_width, screen_height))
 
 
 for note in notes:
-    note["anim"] = 25
+    note["anim"] = ExponentialEaseOut(-note["duration"], 0, 2)
 
 counter = 0 
 
@@ -58,6 +59,10 @@ offset_vel = 0
 scroll = -bar_duration*100
 
 running = True
+
+offset_in = QuadEaseIn(0, 1, 2)
+offset_out = QuadEaseOut(-1, 0, 1)
+
 while running:
     screen.fill("#eeeeee")
     play_time += 1/fps
@@ -65,37 +70,41 @@ while running:
     for note in notes:
         if play_time >= note["time"]:
             if bar_duration*100-10 >= note["time"]*100-scroll >= -10:
-                note["anim"] *= 0.77
+                # note["anim"] *= 0.77
+                note_anim = note["anim"]((play_time-note["time"])/(note["duration"]*2))*50
                 pygame.draw.rect(screen, "#000000", 
                     [
-                        note["time"]*100+100-note["anim"]/4-scroll-offset,
+                        note["time"]*100+100+note_anim-scroll-offset,
                         (middle-note["midi"])*height+screen_height/2,
-                        note["duration"]*100-note["anim"]/6,
+                        note["duration"]*100+note_anim,
                         10
                     ]
                 )
     
     if play_time >= last_time:
         last_time += bar_duration
-        offset = 100 
         scroll += bar_duration*100
+        # offset = 100 
 
-    if play_time >= last_time-bar_duration/15.7:
-        offset -= offset_vel/20
-        offset_vel *= 1.7
-    else:
-        offset_vel = 1
+    # if play_time >= last_time-bar_duration/15.7:
+    #     offset -= offset_vel/20
+    #     offset_vel *= 1.7
+    # else:
+    #     offset_vel = 1
 
-    offset *= 0.9
+    # offset *= 0.9
+
+    print(last_time-play_time)
+    offset = offset_out((last_time-play_time)*2)
 
     # print(duration-play_time+screen_width/2/100)
     if duration-play_time < 0:
         running = False
         
     counter += 1
-    pygame.image.save(screen, f"temp_images_folder/{counter}.png")
-    # clock.tick(60)
-    # pygame.display.update()
+    # pygame.image.save(screen, f"temp_images_folder/{counter}.png")
+    clock.tick(60)
+    pygame.display.update()
 
 print("1")
 

@@ -12,9 +12,9 @@ clock = pygame.time.Clock()
 
 fps = 30
 
-bpm = 120
+bpm = 144
 bar_duration = 60/bpm*4
-duration = 5
+duration = 41
 
 screen_width = 200
 screen_height = 10

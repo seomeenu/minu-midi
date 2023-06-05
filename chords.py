@@ -14,9 +14,8 @@ clock = pygame.time.Clock()
 name = "chords"
 
 font = pygame.font.Font("src/GmarketSansTTFMedium.ttf", 80)
-def draw_center_text(text, x, y, color="#000000", font=font, alpha=255):
+def draw_center_text(text, x, y, color="#000000", font=font):
     render = font.render(text, True, color)
-    render.set_alpha(alpha)
     screen.blit(render, (x-render.get_width()/2, y-render.get_height()/2))
 
 fps = 30
@@ -62,9 +61,9 @@ for timing in timings:
 
 chord_timings = {}
 for timing in noted_timings:
-    chord = find_chords_from_notes(noted_timings[timing][0])
-    if chord != []:
-        chord_timings[timing] = [chord[0], 20, noted_timings[timing][1], 255]
+    chord = find_chords_from_notes(list(dict.fromkeys(noted_timings[timing][0])))
+    if len(chord) > 0:
+        chord_timings[timing] = [chord[0], 20, noted_timings[timing][1], 0]
 
 counter = 0 
 
@@ -88,16 +87,16 @@ while running:
     for i, chord_timing in enumerate(chord_timings):
         if i+1 < len(chord_timings):
             if play_time > chord_timing:
+                chord_timings[chord_timing][3] += (255-chord_timings[chord_timing][3])/10
                 if list(chord_timings.keys())[i+1] > play_time:
                     chord = chord_timings[chord_timing][0]
                     chord_timings[chord_timing][1] *= 0.7
-                    if chord_timing+chord_timings[chord_timing][2] < play_time:
-                        chord_timings[chord_timing][3] *= 0.9
-                    draw_center_text(str(chord), screen_width/2, screen_height/2+chord_timings[chord_timing][1], alpha=chord_timings[chord_timing][3])
+                    draw_center_text(str(chord), screen_width/2, screen_height/2+chord_timings[chord_timing][1])
+                    # draw_center_text(str(chord), screen_width/2, screen_height/2+chord_timings[chord_timing][1], alpha=chord_timings[chord_timing][3])
     
 
     # print(duration-play_time+screen_width/2/100)
-    if duration-play_time < -5:
+    if duration-play_time < -15:
         running = False
         
     counter += 1
